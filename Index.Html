@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Koleksi Anime Saya</title>
+    <style>
+        /* Tema Warna Biru Muda */
+        :root {
+            --bg-color: #f0f8ff;       /* Alice Blue */
+            --primary-color: #4a90e2;  /* Biru Muda Cerah */
+            --secondary-color: #63b3ed;/* Biru Muda Terang */
+            --text-color: #2d3748;
+            --card-bg: #ffffff;
+            --danger-color: #e53e3e;   /* Merah untuk hapus */
+            --warn-color: #dd6b20;     /* Oranye untuk edit */
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Form Input */
+        .form-container {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        .form-container h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+
+        .form-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-control {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-control label {
+            margin-bottom: 5px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .form-control input {
+            padding: 8px;
+            border: 1px solid #cbd5e0;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .form-control input:focus {
+            border-color: var(--primary-color);
+        }
+
+        button {
+            cursor: pointer;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .btn-submit {
+            background-color: var(--primary-color);
+            color: white;
+            width: 100%;
+        }
+
+        .btn-submit:hover {
+            background-color: #3182ce;
+        }
+
+        /* Grid Koleksi Anime */
+        .anime-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        /* Kartu Anime */
+        .anime-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            border-top: 4px solid var(--secondary-color);
+        }
+
+        .anime-poster {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            background-color: #e2e8f0;
+        }
+
+        .anime-info {
+            padding: 15px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .anime-title {
+            font-size: 18px;
+            margin: 0 0 10px 0;
+            color: var(--primary-color);
+        }
+
+        .anime-details {
+            font-size: 14px;
+            margin-bottom: 5px;
+            line-height: 1.4;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+            background-color: #38a169; /* Hijau untuk tamat */
+            width: max-content;
+            margin-bottom: 10px;
+        }
+
+        .status-badge.ongoing {
+            background-color: var(--warn-color); /* Oranye untuk ongoing */
+        }
+
+        /* Tombol Aksi */
+        .action-btns {
+            margin-top: auto;
+            display: flex;
+            gap: 10px;
+            padding-top: 10px;
+        }
+
+        .btn-edit {
+            background-color: #edf2f7;
+            color: var(--warn-color);
+            flex: 1;
+        }
+
+        .btn-edit:hover {
+            background-color: #feebc8;
+        }
+
+        .btn-delete {
+            background-color: #edf2f7;
+            color: var(--danger-color);
+            flex: 1;
+        }
+
+        .btn-delete:hover {
+            background-color: #fed7d7;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>My Anime Collection ✨</h1>
+    </header>
+
+    <div class="container">
+        
+        <div class="form-container">
+            <h3 id="form-title">Tambah Anime Baru</h3>
+            <form id="anime-form">
+                <input type="hidden" id="anime-id">
+                <div class="form-group">
+                    <div class="form-control">
+                        <label for="title">Judul Anime</label>
+                        <input type="text" id="title" required placeholder="Contoh: Naruto">
+                    </div>
+                    <div class="form-control">
+                        <label for="poster">URL Poster Gambar</label>
+                        <input type="url" id="poster" placeholder="https://link-gambar.com/gambar.jpg">
+                    </div>
+                    <div class="form-control">
+                        <label for="genre">Genre</label>
+                        <input type="text" id="genre" placeholder="Contoh: Action, Fantasy">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-control">
+                        <label for="total-ep">Total Episode (Ketik 'Ongoing' jika belum tamat)</label>
+                        <input type="text" id="total-ep" placeholder="Contoh: 24 atau Ongoing">
+                    </div>
+                    <div class="form-control">
+                        <label for="owned-ep">Episode Yang Dimiliki / Ditonton</label>
+                        <input type="number" id="owned-ep" min="0" placeholder="Contoh: 12">
+                    </div>
+                </div>
+                <button type="submit" class="btn-submit" id="btn-save">Simpan Koleksi</button>
+            </form>
+        </div>
+
+        <div class="anime-grid" id="anime-display-grid">
+            </div>
+
+    </div>
+
+    <script>
+        // Mengambil data dari local storage atau buat array kosong jika belum ada
+        let animeList = JSON.parse(localStorage.getItem('myAnimeList')) || [];
+
+        const animeForm = document.getElementById('anime-form');
+        const animeGrid = document.getElementById('anime-display-grid');
+        const formTitle = document.getElementById('form-title');
+        const btnSave = document.getElementById('btn-save');
+
+        // Fungsi untuk menampilkan data ke layar
+        function displayAnime() {
+            animeGrid.innerHTML = '';
+
+            if(animeList.length === 0) {
+                animeGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #a0aec0;">Belum ada koleksi. Silakan tambah di atas!</p>';
+                return;
+            }
+
+            animeList.forEach((anime, index) => {
+                // Logika penentuan status ongoing atau tamat
+                let statusText = "Tamat";
+                let badgeClass = "";
+                let displayTotal = anime.totalEp;
+
+                if (!anime.totalEp || anime.totalEp.toLowerCase() === 'ongoing' || anime.totalEp.trim() === '') {
+                    statusText = "Ongoing";
+                    badgeClass = "ongoing";
+                    displayTotal = "?";
+                }
+
+                // Gunakan gambar placeholder jika URL kosong
+                const posterUrl = anime.poster.trim() !== "" ? anime.poster : "https://via.placeholder.com/220x280?text=No+Poster";
+
+                animeGrid.innerHTML += `
+                    <div class="anime-card">
+                        <img src="${posterUrl}" alt="${anime.title}" class="anime-poster">
+                        <div class="anime-info">
+                            <span class="status-badge ${badgeClass}">${statusText}</span>
+                            <h4 class="anime-title">${anime.title}</h4>
+                            <div class="anime-details"><strong>Genre:</strong> ${anime.genre || '-'}</div>
+                            <div class="anime-details"><strong>Total Ep:</strong> ${displayTotal}</div>
+                            <div class="anime-details"><strong>Ep Dimiliki:</strong> ${anime.ownedEp || '0'}</div>
+                            
+                            <div class="action-btns">
+                                <button class="btn-edit" onclick="editAnime(${index})">Edit</button>
+                                <button class="btn-delete" onclick="deleteAnime(${index})">Hapus</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Fungsi Menambah / Mengupdate Anime
+        animeForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const id = document.getElementById('anime-id').value;
+            const title = document.getElementById('title').value;
+            const poster = document.getElementById('poster').value;
+            const genre = document.getElementById('genre').value;
+            const totalEp = document.getElementById('total-ep').value;
+            const ownedEp = document.getElementById('owned-ep').value;
+
+            const animeData = { title, poster, genre, totalEp, ownedEp };
+
+            if (id === "") {
+                // Jika ID kosong, berarti tambah data baru
+                animeList.push(animeData);
+            } else {
+                // Jika ID berisi index, berarti edit data lama
+                animeList[id] = animeData;
+                // Kembalikan form ke mode tambah
+                formTitle.innerText = "Tambah Anime Baru";
+                btnSave.innerText = "Simpan Koleksi";
+                document.getElementById('anime-id').value = "";
+            }
+
+            // Simpan ke local storage dan perbarui tampilan
+            localStorage.setItem('myAnimeList', JSON.stringify(animeList));
+            animeForm.reset();
+            displayAnime();
+        });
+
+        // Fungsi memicu mode Edit
+        function editAnime(index) {
+            const anime = animeList[index];
+            
+            document.getElementById('anime-id').value = index;
+            document.getElementById('title').value = anime.title;
+            document.getElementById('poster').value = anime.poster;
+            document.getElementById('genre').value = anime.genre;
+            document.getElementById('total-ep').value = anime.totalEp;
+            document.getElementById('owned-ep').value = anime.ownedEp;
+
+            formTitle.innerText = "Edit Anime: " + anime.title;
+            btnSave.innerText = "Perbarui Koleksi";
+            
+            // Scroll otomatis ke form input agar mudah di-edit
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        // Fungsi Hapus Anime
+        function deleteAnime(index) {
+            if(confirm("Apakah Anda yakin ingin menghapus anime ini dari koleksi?")) {
+                animeList.splice(index, 1);
+                localStorage.setItem('myAnimeList', JSON.stringify(animeList));
+                displayAnime();
+                
+                // Jika sedang dalam mode edit lalu dihapus, reset formnya
+                formTitle.innerText = "Tambah Anime Baru";
+                btnSave.innerText = "Simpan Koleksi";
+                document.getElementById('anime-id').value = "";
+                animeForm.reset();
+            }
+        }
+
+        // Jalankan fungsi tampilkan data saat halaman pertama kali dibuka
+        displayAnime();
+    </script>
+</body>
+</html>
